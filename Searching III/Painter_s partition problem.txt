@@ -1,0 +1,39 @@
+bool ispossible(int t,vector<int>& arr,int k)
+{
+    int s=0,v=0;
+    for(auto it:arr)
+    {
+        s+=it;
+        if(it>t)
+        return false;
+        if (s > t) {
+          v++;
+          s=it;
+        }
+    }
+    // if(s)
+    if(s>0)
+    v++;
+    return v<=k;
+}
+int findLargestMinDistance(vector<int> &boards, int k)
+{
+    //    Write your code here.
+    int low=1e9,high=0;
+    for (auto it : boards) {
+        high += it;
+        low=min(low,it);
+    }
+    int ans=0;
+    while(low<=high)
+    {
+        int m=low+(high-low)/2;
+        if(ispossible(m,boards,k))
+        {
+            ans=m;
+            high=m-1;
+        }
+        else low=m+1;
+    }
+    return ans;
+}
