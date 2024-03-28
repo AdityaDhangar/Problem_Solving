@@ -1,0 +1,34 @@
+if(root==NULL)
+        return 0;
+    int oddsum=0,evensum=0;
+    int a=1;
+    queue<TreeNode* > qu;
+    qu.push(root);
+    while(!qu.empty())
+    {
+        int count=qu.size();
+        for(int i=0;i<count;i++)
+        {
+            TreeNode* curr=qu.front();
+            qu.pop();
+            if(a%2==0)
+            {
+                evensum+=curr->val;
+            }
+            else
+            {
+                oddsum+=curr->val;
+            }
+            if(curr->left!=NULL)
+            {
+                qu.push(curr->left);
+            }
+            if(curr->right!=NULL)
+            {
+                qu.push(curr->right);
+            }
+            
+        }
+        a++;
+    }
+    return oddsum-evensum;  
