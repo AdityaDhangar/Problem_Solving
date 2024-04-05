@@ -1,0 +1,22 @@
+int findCeil(Node* root, int input) {
+    // Your code here
+    if (root == NULL) return -1;
+    int res=-1;
+    while(root)
+    {
+    if(root->data==input)
+    {
+        return input;
+    }
+    if(root->data>input)
+    {
+        res=root->data;
+        root=root->left;
+    }
+    else
+    {
+        root=root->right;
+    }
+    }
+return res;  
+}

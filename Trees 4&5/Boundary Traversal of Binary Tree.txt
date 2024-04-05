@@ -1,0 +1,79 @@
+/************************************************************
+
+    Following is the Binary Tree node structure:
+
+    template <typename T>
+    class TreeNode
+    {
+    public:
+        T data;
+        TreeNode<T> *left;
+        TreeNode<T> *right;
+
+        TreeNode(T data)
+        {
+            this -> data = data;
+            left = NULL;
+            right = NULL;
+        }
+
+        ~TreeNode()
+        {
+            if(left)
+                delete left;
+            if(right)
+                delete right;
+        }
+    };
+
+************************************************************/
+bool checkleaf(TreeNode<int> *root){
+    return (!root->left) && (!root->right);
+}
+void leftTraversal(TreeNode<int> *root,vector<int> &result){
+    TreeNode<int> *current=root->left;
+    while(current){
+        if(!checkleaf(current)) 
+        result.push_back(current->data);
+        if(current->left)  
+         current=current->left;
+        else    
+        current=current->right;
+    }
+}
+void rightTraversal(TreeNode<int> *root,vector<int> &result){
+    TreeNode<int> *current=root->right;
+    vector<int>right;
+    while(current){
+        if(!checkleaf(current)) 
+        right.push_back(current->data);
+        if(current->right)
+           current=current->right;
+        else
+            current=current->left;
+    }
+    for (int i = right.size() - 1; i >= 0; i--) {
+        result.push_back(right[i]);
+    }
+}
+
+void makeleaf(TreeNode<int> *root,vector<int> &result){
+    if (checkleaf(root)) {
+        result.push_back(root->data);
+        return;
+    }
+    if(root->left)  makeleaf(root->left,result);
+    if(root->right) makeleaf(root->right,result);
+}
+vector<int> traverseBoundary(TreeNode<int> *root)
+{
+    vector<int>result;
+    if(root==NULL) 
+     return result;
+    if(!checkleaf(root))   
+     result.push_back(root->data);
+    leftTraversal(root,result);
+    makeleaf(root,result);
+    rightTraversal(root,result);
+	// Write your code here.
+}
