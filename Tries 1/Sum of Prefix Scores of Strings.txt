@@ -1,0 +1,71 @@
+class Solution {
+public:
+    struct TrieNode {
+	TrieNode *links[26];
+	bool flag = false;
+    int count =0;
+	
+	bool containKey(char ch) {
+		return (links[ch - 'a'] != NULL);
+	}
+	
+	void put(char ch, TrieNode *node) {
+		links[ch - 'a'] = node;
+	}
+	
+	TrieNode *get(char ch) {
+		return links[ch - 'a'];
+	}
+
+    void increase(){
+        count++;
+    }
+    int value(){
+        return count;
+    }
+
+};
+class Trie {
+public:
+	TrieNode* root;
+public:
+	Trie() {
+		root = new TrieNode();
+	}
+
+	void insert(string word) {
+		TrieNode *node = root;
+		for (int i = 0; i < word.size(); i++) {
+			if (!node->containKey(word[i])) {
+				node->put(word[i], new TrieNode());
+			}
+			node = node->get(word[i]);
+            node->increase();
+		}
+		
+	}
+    int add(string words){
+        int temp =0;
+        int n = words.size();
+        TrieNode * node = root ;
+        for(int i =0; i<n ; i++){
+            node = node->get(words[i]);
+            temp += node->value();
+        }
+        return temp;
+    }
+};
+    vector<int> sumPrefixScores(vector<string>& words) {
+        vector<int>ans;
+        Trie t;
+
+        for(auto i : words){
+            t.insert(i);
+        }
+
+        for(auto i : words){
+            ans.push_back(t.add(i));
+        }
+        return ans;    
+    }
+};

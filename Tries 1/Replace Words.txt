@@ -1,0 +1,78 @@
+class TrieNode{
+    public:
+    bool end;
+    TrieNode* child[26];
+
+    TrieNode()
+    {
+        end = false;
+        for(int i = 0;i<26;i++)
+        {
+            child[i] = NULL;
+        }
+        
+    }
+};
+class Trie
+{
+    public:
+    TrieNode* root;
+    Trie(){
+        root = new TrieNode;
+    }
+    void insert( string word )
+    {
+    TrieNode *node = root;
+    for(auto i: word)
+    {
+        if(node->child[i - 'a']== NULL)
+        {
+            node->child[i-'a']  = new TrieNode();
+        }
+        node = node->child[i-'a'];
+    }
+    node->end = true;
+}
+string search(string word)
+{
+    TrieNode *node = root;
+    if(node->child[word[0]-'a']==NULL)
+    return word;
+
+    string res = "";
+    for(auto i: word)
+    {
+        if(node->end==true)
+        break;
+
+        if(node->child[i-'a']== NULL)
+        {
+            return word;
+        }
+        res += i;
+        node = node->child[i-'a'];
+    } 
+    return res;
+}
+};
+class Solution {
+public:
+    string replaceWords(vector<string>& dictionary, string sentence) {
+      Trie *root = new Trie;
+
+        for(auto i: dictionary) 
+        {
+            root->insert(i);
+        }
+        string word;
+        istringstream iss(sentence);
+        string res = "";
+        while(getline(iss,word,' '))
+        {
+
+            res = res +root->search(word) + " "; 
+        }
+        res.pop_back();
+        return res;   
+    }
+};

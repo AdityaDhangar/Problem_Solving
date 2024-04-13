@@ -1,0 +1,75 @@
+class TrieNode{
+    public:
+    int index;
+    int len;
+    TrieNode* next[26];
+    TrieNode()
+    {
+        for(int i=0;i<26;i++)
+        {
+            next[i]=NULL;
+        }
+        len=INT_MAX;
+        index=-1;
+    }
+};
+class Solution {
+public:
+    TrieNode* root=new TrieNode();
+    int l1=INT_MAX;
+    int j=-1;
+    vector<int> stringIndices(vector<string>& arr, vector<string>& q) {
+     TrieNode* root=new TrieNode();
+    for(int i=0;i<arr.size();i++)
+        {
+            insert(arr[i],i);
+        }
+        vector<int>ans;
+        for(int i=0;i<q.size();i++)
+        {
+            ans.push_back(find(q[i]));
+        }
+        return ans;
+    }
+    int find(string &s)
+    {
+        TrieNode* temp=root;
+        int ans=-1;
+        for(int i=s.length()-1;i>=0;i--)
+        {
+            if(temp->next[s[i]-'a']!=NULL)
+            {
+                temp=temp->next[s[i]-'a'];
+                ans=temp->index;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return ans==-1?j:ans;
+    }
+    void insert(string &s,int &index)
+    {
+        TrieNode* temp=root;
+        int len=s.length();
+        if(len<l1)
+        {
+            l1=len;
+            j=index;
+        }
+        for(int i=s.length()-1;i>=0;i--)
+        {
+            if(temp->next[s[i]-'a']==NULL)
+            {
+                temp->next[s[i]-'a']=new TrieNode();
+            }
+            temp=temp->next[s[i]-'a'];
+            if(len<temp->len)
+            {
+                temp->len=len;
+                temp->index=index;
+            }
+        }
+    }
+};
