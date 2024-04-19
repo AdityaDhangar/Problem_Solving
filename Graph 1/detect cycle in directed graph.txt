@@ -1,0 +1,40 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Solution {
+private:
+    bool hasCycle(vector<vector<int>>& graph, int node, vector<bool>& visited, vector<bool>& recStack) {
+        if (!visited[node]) {
+            visited[node] = true;
+            recStack[node] = true;
+
+            for (int neighbor : graph[node]) {
+                if (!visited[neighbor] && hasCycle(graph, neighbor, visited, recStack))
+                    return true;
+                else if (recStack[neighbor])
+                    return true;
+            }
+        }
+
+        recStack[node] = false;
+        return false;
+    }
+
+public:
+    bool hasCycle(int V, vector<vector<int>>& edges) {
+        vector<vector<int>> graph(V);
+        for (auto& edge : edges) {
+            graph[edge[0]].push_back(edge[1]);
+        }
+
+        vector<bool> visited(V, false);
+        vector<bool> recStack(V, false);
+
+        for (int i = 0; i < V; ++i) {
+            if (hasCycle(graph, i, visited, recStack))
+                return true;
+        }
+
+        return false;
+    }
+};
