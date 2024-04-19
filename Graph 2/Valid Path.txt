@@ -1,0 +1,55 @@
+#include <iostream>
+#include<bits/stdc++.h>
+
+using namespace std;
+
+class Solution {
+public:
+    bool isInsideCircle(int x, int y, int r, int cx, int cy) {
+             double distance = sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
+
+        
+        return distance < r;
+    }
+
+    bool canMoveWithoutTouchingCircle(int x, int y, int n, int r, std::vector<std::pair<int, int>>& circles) {
+                for (int i = 0; i <= x; ++i) {
+            for (int j = 0; j <= y; ++j) {
+                
+                for (const auto& circle : circles) {
+                    int cx = circle.first; // Circle center x-coordinate
+                    int cy = circle.second; // Circle center y-coordinate
+                    if (isInsideCircle(i, j, r, cx, cy)) {
+                                               return false;
+                    }
+                }
+            }
+        }
+       
+        return true;
+    }
+};
+
+int main() {
+    int x = 5; // Width of the rectangle
+    int y = 5; // Height of the rectangle
+    int n = 2; // Number of circles
+    int r = 2; // Radius of the circles
+
+    
+    vector<pair<int, int>> circles = {{2, 2}, {4, 4}};
+
+
+    Solution solution;
+
+        bool possible = solution.canMoveWithoutTouchingCircle(x, y, n, r, circles);
+
+    // Print the result
+    if (possible) {
+        cout << "It is possible to move from (0, 0) to (" << x << ", " << y << ") without touching any circle." << endl;
+    } else {
+        cout << "It is not possible to move from (0, 0) to (" << x << ", " << y << ") without touching any circle." <<endl;
+    }
+
+    return 0;
+}

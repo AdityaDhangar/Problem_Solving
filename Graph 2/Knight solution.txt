@@ -1,0 +1,53 @@
+#include<bits/stdc++.h>
+
+using namesapce std;
+
+class Solution {
+public:
+    int knight(int A, int B, int C, int D, int E, int F) {
+       
+        int dx[] = {-2, -1, 1, 2, -2, -1, 1, 2};
+        int dy[] = {-1, -2, -2, -1, 1, 2, 2, 1};
+        
+        vector<vector<bool>> visited(A, vector<bool>(B, false));
+   
+        queue<pair<int, int>> q;
+        
+
+        q.push({C - 1, D - 1});
+     
+        visited[C - 1][D - 1] = true;
+        
+    
+        int steps = 0;
+
+        while (!q.empty()) {
+            int size = q.size();
+            // Traverse all positions at current distance level
+            for (int i = 0; i < size; ++i) {
+                int x = q.front().first;
+                int y = q.front().second;
+                q.pop();
+              
+                if (x == E - 1 && y == F - 1)
+                    return steps;
+                
+                
+                for (int j = 0; j < 8; ++j) {
+                    int nx = x + dx[j];
+                    int ny = y + dy[j];
+                    
+                    
+                    if (nx >= 0 && nx < A && ny >= 0 && ny < B && !visited[nx][ny]) {
+                        q.push({nx, ny});
+                        visited[nx][ny] = true;
+                    }
+                }
+            }
+                        ++steps;
+        }
+        
+       
+        return -1;
+    }
+};
