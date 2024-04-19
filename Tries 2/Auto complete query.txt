@@ -1,0 +1,69 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+class TrieNode {
+public:
+    TrieNode* children[26];
+    bool isEnd;
+    vector<string> words;
+
+    TrieNode() {
+        for (int i = 0; i < 26; i++)
+            children[i] = nullptr;
+        isEnd = false;
+    }
+};
+
+class Trie {
+private:
+    TrieNode* root;
+
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+
+    void insertIntoTrie(string name) {
+        TrieNode* node = root;
+        for (char ch : name) {
+            if (node->children[ch - 'a'] == nullptr)
+                node->children[ch - 'a'] = new TrieNode();
+            node = node->children[ch - 'a'];
+            node->words.push_back(name);
+        }
+        node->isEnd = true;
+    }
+
+    void query(string prefix) {
+        TrieNode* node = root;
+        for (char ch : prefix) {
+            if (node->children[ch - 'a'] == nullptr) {
+                cout << "No string Exist till now with the given prefix";
+                return;
+            }
+            node = node->children[ch - 'a'];
+        }
+
+        cout << "{";
+        for (auto word : node->words)
+            cout << word << ",";
+        cout << "}";
+    }
+};
+
+int main() {
+    vector<string> queries = {"aditya", "aman", "abhishek", "amar", "akash", "ajay", "vibhor", "saurabh", "ankit"};
+    Trie* root = new Trie();
+    for (auto name : queries)
+        root->insertIntoTrie(name);
+
+    string prefix;
+    cout << "Enter the prefix: ";
+    cin >> prefix;
+    root->query(prefix);
+
+    return 0;
+}

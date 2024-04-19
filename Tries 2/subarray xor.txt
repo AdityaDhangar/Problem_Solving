@@ -1,0 +1,77 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+class TrieNode {
+public:
+    TrieNode* children[2];
+    int count;
+
+    TrieNode() {
+        children[0] = nullptr;
+        children[1] = nullptr;
+        count = 0;
+    }
+};
+
+class Trie {
+private:
+    TrieNode* root;
+
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+
+    void insert(int num) {
+        TrieNode* node = root;
+        for (int i = 31; i >= 0; i--) {
+            int bit = (num >> i) & 1;
+            if (node->children[bit] == nullptr)
+                node->children[bit] = new TrieNode();
+            node = node->children[bit];
+            node->count++;
+        }
+    }
+
+    int countXORLessThanK(int num, int K) {
+        TrieNode* node = root;
+        int result = 0;
+        for (int i = 31; i >= 0 && node != nullptr; i--) {
+            int bitNum = (num >> i) & 1;
+            int bitK = (K >> i) & 1;
+            if (bitK) {
+                if (node->children[bitNum] != nullptr)
+                    result += node->children[bitNum]->count;
+                node = node->children[1 - bitNum];
+            } else {
+                node = node->children[bitNum];
+            }
+        }
+        return result;
+    }
+};
+
+int main() {
+    int n, K;
+    cin >> n >> K;
+
+    vector<int> arr(n);
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
+
+    Trie trie;
+    trie.insert(0); 
+    int xorSum = 0, count = 0;
+    for (int i = 0; i < n; i++) {
+        xorSum ^= arr[i];
+        count += trie.countXORLessThanK(xorSum, K);
+        trie.insert(xorSum);
+    }
+
+    cout << count << endl;
+
+    return 0;
+}
