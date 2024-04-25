@@ -1,0 +1,39 @@
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+         vector<vector<int>> adjList(numCourses);
+        vector<int> indegree(numCourses, 0);
+
+        for (const auto& prerequisite : prerequisites) {
+            adjList[prerequisite[1]].push_back(prerequisite[0]);
+            indegree[prerequisite[0]]++;
+        }
+
+        queue<int> q;
+        vector<int> result;
+        
+     
+        for (int i = 0; i < numCourses; ++i) {
+            if (indegree[i] == 0)
+                q.push(i);
+        }
+        while (!q.empty()) {
+        int course = q.front();
+        q.pop();
+        result.push_back(course);
+            
+           
+            for (int neighbor : adjList[course]) {
+                if (--indegree[neighbor] == 0)
+                    q.push(neighbor);
+            }
+        }
+        
+       
+        if (result.size() != numCourses)
+            return {};
+        
+        // Return the valid ordering of courses
+        return result;
+    }
+};

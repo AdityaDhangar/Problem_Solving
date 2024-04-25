@@ -1,0 +1,52 @@
+src--;
+        dst--;
+
+        // Priority queue for Dijkstra's algorithm
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        pq.push({0, src});
+
+        // Adjacency list for the graph and reverse edges
+        vector<vector<int>> adj(n);
+        vector<vector<int>> rev(n);
+        
+        // Construct adjacency list and reverse adjacency list
+        for (auto& edge : edges) {
+            adj[edge[0] - 1].push_back(edge[1] - 1);
+            rev[edge[1] - 1].push_back(edge[0] - 1);
+        }
+
+        // Set to keep track of visited nodes and their direction
+        set<pair<int, int>> vis;
+        vis.insert({src, 1}); // Marking source as visited in forward direction
+        vis.insert({src, 2}); // Marking source as visited in reverse direction
+        
+        // Dijkstra's algorithm
+        while (!pq.empty()) {
+            auto it = pq.top();
+            pq.pop();
+            int node = it.second;
+            int cost = it.first;
+            
+            // If destination reached, return the cost
+            if (node == dst)
+                return cost;
+
+            // Explore neighbors in forward direction
+            for (auto neighbor : adj[node]) {
+                if (vis.find({neighbor, 1}) == vis.end()) {
+                    vis.insert({neighbor, 1});
+                    pq.push({cost, neighbor});
+                }
+            }
+
+            // Explore neighbors in reverse direction
+            for (auto neighbor : rev[node]) {
+                if (vis.find({neighbor, 2}) == vis.end()) {
+                    vis.insert({neighbor, 2});
+                    pq.push({cost + 1, neighbor});
+                }
+            }
+        }
+        
+        // If destination is not reachable, return -1
+        return -1;
