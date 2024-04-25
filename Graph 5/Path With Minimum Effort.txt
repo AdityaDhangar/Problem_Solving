@@ -1,0 +1,34 @@
+class Solution {
+public:
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        const int rows = heights.size();
+        const int cols = heights[0].size();
+        const vector<int> dirs = {-1, 0, 1, 0, -1};
+        priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<tuple<int, int, int>>> pq;
+        vector<vector<int>> effort(rows, vector<int>(cols, numeric_limits<int>::max()));
+        
+        pq.push({0, 0, 0});
+        effort[0][0] = 0;
+        
+        while (!pq.empty()) {
+            auto [eff, r, c] = pq.top();
+            pq.pop();
+            if (r == rows - 1 && c == cols - 1) {
+                return eff;
+            }
+            for (int i = 0; i < 4; ++i) {
+                int nr = r + dirs[i];
+                int nc = c + dirs[i + 1];
+                
+                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+                    int newEff = max(eff, abs(heights[r][c] - heights[nr][nc]));
+                    if (newEff < effort[nr][nc]) {
+                        effort[nr][nc] = newEff;
+                        pq.push({newEff, nr, nc});
+                    }
+                }
+            }
+        }
+        return -1; 
+    }
+};
