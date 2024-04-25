@@ -1,0 +1,24 @@
+ vector<bool> visited(V, false);
+        stack<int> Stack;
+        for (int i = 0; i < V; ++i) {
+            if (!visited[i])
+                dfs(i, adj, visited, Stack);
+        }
+
+        // Step 2: Reverse the graph
+        vector<vector<int>> revAdj(V);
+        reverseGraph(adj, revAdj);
+
+        // Step 3: Do DFS on the reversed graph, starting from the vertices popped from the stack
+        fill(visited.begin(), visited.end(), false);
+        int SCCs = 0;
+        while (!Stack.empty()) {
+            int node = Stack.top();
+            Stack.pop();
+            if (!visited[node]) {
+                dfsReverse(node, revAdj, visited);
+                SCCs++;
+            }
+        }
+
+        return SCCs;
