@@ -1,0 +1,66 @@
+class Solution {
+public:
+    int find(int a , vector<int> & parent) {
+        if(a == parent[a]){
+            return a;
+        }
+        return parent[a] = find(parent[a],parent);
+    }
+    void union_(int a, int b,vector<int> &rank,vector<int>& parent){
+        if(rank[a] > rank[b]){
+            parent[b] = a;
+        }else if(rank[a] < rank[b]){
+            parent[a] = b;
+        }else{
+            parent[b] = a;
+            rank[a]++;
+        }
+    }
+    vector<int> findRedundantDirectedConnection(vector<vector<int>>& edges) {
+        vector<int> ans;
+        int n{};
+        for(auto &v: edges) {
+            n = max({n,v[0],v[1]});
+        }
+
+        int en = edges.size();
+        int potEdge1{-1}; 
+        int potEdge2{-1};
+        vector<int>inDeg(n+1,-1); 
+        for(int i{}; i < en; i++) {
+            if(inDeg[edges[i][1]] != -1) {
+                potEdge1 = inDeg[edges[i][1]];
+                potEdge2 = i;
+                break;
+            }
+            inDeg[edges[i][1]] = i;
+        }
+
+        vector<int> parent(n+1);
+        for(int i{}; i <= n; i++) {
+            parent[i] = i;
+        }
+        vector<int>rank(n+1,1);
+
+        vector<int> cycleEdge = {-1,-1};
+        for(int i{}; i < en; i++) {
+            if(i == potEdge2) {continue;} 
+
+            int sp = find(edges[i][0],parent);
+            int dp = find(edges[i][1],parent);
+            if(sp == dp){
+                cycleEdge = edges[i];
+            }else{
+                union_(sp,dp,rank,parent);
+            }
+        }
+
+        if(potEdge1 == -1){
+            return cycleEdge;
+        }else if(cycleEdge[0] == -1){
+            return edges[potEdge2];
+        }else{
+            return edges[potEdge1];
+        }
+    }
+};
