@@ -1,0 +1,42 @@
+class Solution {
+public:
+      bool isMatchHelper(const std::string& s, const std::string& p, int i, int j,               unordered_map<std::string, bool>& memo) {
+      string key = std::to_string(i) + "," + to_string(j);
+    if (memo.find(key) != memo.end()) {
+        return memo[key];
+    }
+
+    // Base cases
+    if (i == s.length() && j == p.length()) {
+        return true;  // Both s and p are exhausted
+    } else if (j == p.length()) {
+        return false; // Pattern p is exhausted but string s is not
+    } else if (i == s.length()) {
+        // Check if remaining characters in pattern p are all '*'
+        for (int k = j; k < p.length(); ++k) {
+            if (p[k] != '*') {
+                return false;
+            }
+        }
+        return true; // String s is exhausted but pattern p has only '*'
+    }
+
+    // Recursive cases
+    bool match = false;
+    if (s[i] == p[j] || p[j] == '?') {
+        match = isMatchHelper(s, p, i + 1, j + 1, memo);
+    } else if (p[j] == '*') {
+       
+        match = isMatchHelper(s, p, i, j + 1, memo) || isMatchHelper(s, p, i + 1, j, memo);
+    }
+
+    // Memoize the result
+    memo[key] = match;
+    return match;
+}
+
+    bool isMatch(string s, string p) {
+    unordered_map<string, bool> memo;
+    return isMatchHelper(s, p, 0, 0, memo); 
+    }
+};

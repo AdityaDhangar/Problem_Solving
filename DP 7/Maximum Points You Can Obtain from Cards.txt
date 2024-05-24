@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int maxScore(vector<int>& cardPoints, int k) {
+    int n = cardPoints.size();
+    int totalSum = accumulate(cardPoints.begin(), cardPoints.end(), 0);
+    if (k == n) {
+        return totalSum;
+    }
+    int subarrayLength = n - k;
+    int subarraySum = accumulate(cardPoints.begin(), cardPoints.begin() + subarrayLength, 0);
+    int minSubarraySum = subarraySum;
+    for (int i = subarrayLength; i < n; ++i) {
+        subarraySum += cardPoints[i] - cardPoints[i - subarrayLength];
+        minSubarraySum = min(minSubarraySum, subarraySum);
+    }
+    return totalSum - minSubarraySum;   
+    }
+};

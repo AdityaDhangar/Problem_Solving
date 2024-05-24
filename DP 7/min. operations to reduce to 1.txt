@@ -1,0 +1,43 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int minOperations(int n) {
+    // Create a dp array to store the minimum number of operations for each number
+    vector<int> dp(n + 1, 0);
+    
+    // Initialize base case
+    dp[1] = 0; // It takes 0 operations to reduce 1 to 1
+
+    // Fill the dp array
+    for (int i = 2; i <= n; ++i) {
+        // Start with the operation of subtracting 1
+        dp[i] = dp[i - 1] + 1;
+
+        // Check if divisible by 2 and take the minimum
+        if (i % 2 == 0) {
+            dp[i] = min(dp[i], dp[i / 2] + 1);
+        }
+
+        // Check if divisible by 3 and take the minimum
+        if (i % 3 == 0) {
+            dp[i] = min(dp[i], dp[i / 3] + 1);
+        }
+    }
+
+    // The answer for the minimum operations to reduce n to 1 is stored in dp[n]
+    return dp[n];
+}
+
+int main() {
+    int n;
+    cout << "Enter a number: ";
+    cin >> n;
+    
+    int result = minOperations(n);
+    cout <<  result << endl;
+    
+    return 0;
+}
